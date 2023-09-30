@@ -3,6 +3,7 @@ package aws
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/sts"
@@ -42,7 +43,8 @@ func (a *AssumeRoleAndRun) AssumeRole(ctx context.Context) (*Session, error) {
 		if err != nil {
 			return nil, fmt.Errorf("failed to call get caller identity: %w", err)
 		}
-		sessionName = *output.UserId
+		parts := strings.Split(*output.Arn, "/")
+		sessionName = parts[len(parts)-1]
 	}
 	output, err := s.AssumeRole(ctx, &sts.AssumeRoleInput{
 		RoleArn:         &a.RoleARN,

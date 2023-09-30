@@ -17,9 +17,9 @@ var rootCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		arar := &aws.AssumeRoleAndRun{
 			Region:          viper.GetString("region"),
-			RoleARN:         viper.GetString("role-name"),
-			SessionName:     viper.GetString("role-session-name"),
-			UsernameSession: viper.GetBool("username-session"),
+			RoleARN:         viper.GetString("role_arn"),
+			SessionName:     viper.GetString("role_session_name"),
+			UsernameSession: viper.GetBool("username_session"),
 		}
 		ctx := context.Background()
 		session, err := arar.AssumeRole(ctx)
@@ -30,6 +30,9 @@ var rootCmd = &cobra.Command{
 			return nil
 		}
 		c := exec.Command(args[0], args[1:]...)
+		c.Stdin = os.Stdin
+		c.Stdout = os.Stdout
+		c.Stderr = os.Stderr
 		c.Env = append(
 			os.Environ(),
 			"AWS_ACCESS_KEY_ID="+session.AccessKeyID,
@@ -60,14 +63,15 @@ func init() {
 	rootCmd.Flags().String("region", "", "AWS region")
 	viper.BindPFlag("region", rootCmd.Flags().Lookup("region"))
 	rootCmd.Flags().String("role-arn", "", "IAM Role ARN")
-	viper.BindPFlag("role-arn", rootCmd.Flags().Lookup("role"))
+	viper.BindPFlag("role_arn", rootCmd.Flags().Lookup("role-arn"))
 	rootCmd.Flags().String("role-session-name", "", "session identifier")
-	viper.BindPFlag("role-session-name", rootCmd.Flags().Lookup("role-session-name"))
+	viper.BindPFlag("role_session_name", rootCmd.Flags().Lookup("role-session-name"))
 	rootCmd.Flags().BoolP("username-session", "u", false, "use IAM user name as session identifier")
-	viper.BindPFlag("username-session", rootCmd.Flags().Lookup("username-session"))
+	viper.BindPFlag("username_session", rootCmd.Flags().Lookup("username-session"))
 
-	viper.SetEnvPrefix("AWS")
-	viper.BindEnv("role-arn", "role-session-name")
+	viper.SetEnvPrefix("aws")
+	viper.BindEnv("role_arn")
+	viper.BindEnv("role_session_name")
 }
 
 // SetVersion sets version of the command
