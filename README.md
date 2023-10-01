@@ -23,6 +23,12 @@ And you cannot specify the role to assume with environment variable. You always 
 Those limitations are really hard to use in CI/CD. `arar` provides those mechanisms.
 
 
+Install
+-------
+
+Download binary from [Releases](https://github.com/ikedam/arar/releases).
+
+
 Usage
 -----
 
@@ -50,6 +56,7 @@ arar \
   aws sts get-caller-identity
 ```
 
+
 MFA support
 -----------
 
@@ -62,6 +69,7 @@ arar \
   aws sts get-caller-identity
 ```
 
+
 Automatic session name with IAM user name
 -----------------------------------------
 
@@ -71,3 +79,9 @@ This is useful when the role is configured with `"sts:RoleSessionName": "${aws:u
 ```console
 arar -u -- aws sts get-caller-identity
 ```
+
+
+License
+-------
+
+[MIT](./LICENSE)
