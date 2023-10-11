@@ -1,0 +1,18 @@
+version: '3'
+services:
+  terraform:
+    image: hashicorp/terraform:1.5.7
+    profiles: [dummy]
+    network_mode: bridge
+    environment:
+      - http_proxy
+      - https_proxy
+      - no_proxy
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_SESSION_TOKEN
+      - AWS_DEFAULT_REGION
+      - AWS_REGION
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
